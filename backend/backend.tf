@@ -40,7 +40,9 @@ resource "aws_s3_bucket_policy" "terraform_state_policy" {
   "Statement": [
     {
       "Effect": "Allow",
-      "Principal": "*",
+      "Principal": {
+        "AWS": "arn:aws:iam::471112976134:role/TerraformRole"
+      },
       "Action": [
         "s3:GetBucketPolicy",
         "s3:ListBucket",

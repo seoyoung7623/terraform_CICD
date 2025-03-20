@@ -4,7 +4,7 @@ name: 'Terraform'
 on:
   push:
     branches:
-      - 'stage'
+      - 'dev'
   pull_request:
     branches:
       - 'main'
@@ -57,8 +57,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
-        aws-access-key-id: ${{ secrets.TF_DEV_JUNG9546_AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.TF_DEV_JUNG9546_AWS_SECRET_ACCESS_KEY }}
+        aws-access-key-id: ${{ secrets.TF_DEV_SEOYOUNG_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.TF_DEV_SEOYOUNG_AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Check and Initialize Terraform Backend
@@ -91,8 +91,8 @@ jobs:
         }
 
         # Terraform 상태 관리를 위한 S3 버킷과 DynamoDB 테이블 이름
-        S3_BUCKET="jung9546-terraformstate"
-        DYNAMODB_TABLE="jung9546-terraform-state"
+        S3_BUCKET="seoyoung-terraformstate-s3"
+        DYNAMODB_TABLE="seoyoung-terraformstate-dynamo"
 
         # 버킷과 테이블의 존재 여부를 확인
         BUCKET_EXISTS=$(check_bucket_exists "$S3_BUCKET")
@@ -142,12 +142,12 @@ jobs:
 
       - name: Terraform Backend Init
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TF_DEV_JUNG9546_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_DEV_JUNG9546_AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.TF_DEV_SEOYOUNG_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_DEV_SEOYOUNG_AWS_SECRET_ACCESS_KEY }}
         run: |
           cd terraform_stage; terraform init \
             -backend-config="region=ap-northeast-2" \
-            -backend-config="bucket=jung9546-terraform-state" \
+            -backend-config="bucket=seoyoung-terraform-state" \
             -backend-config="key=stage/terraform/terraform.tfstate"
 
   backend_destroy:
@@ -169,18 +169,18 @@ jobs:
 
       - name: Terraform Init for Destroy
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TF_DEV_JUNG9546_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_DEV_JUNG9546_AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.TF_DEV_SEOYOUNG_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_DEV_SEOYOUNG_AWS_SECRET_ACCESS_KEY }}
         run: |
           cd terraform_stage; terraform init \
             -backend-config="region=ap-northeast-2" \
-            -backend-config="bucket=jung9546-terraform-state" \
+            -backend-config="bucket=seoyoung-terraform-state" \
             -backend-config="key=stage/terraform/terraform.tfstate"
 
       - name: Terraform Destroy
         if: ${{ github.event.inputs.confirm_destroy == 'DESTROY' }}
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.TF_DEV_JUNG9546_AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_DEV_JUNG9546_AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.TF_DEV_SEOYOUNG_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TF_DEV_SEOYOUNG_AWS_SECRET_ACCESS_KEY }}
         run: |
           cd terraform_stage; terraform destroy -auto-approve

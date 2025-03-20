@@ -41,7 +41,7 @@ resource "aws_s3_bucket_policy" "terraform_state_policy" {
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::471112976134:role/TerraformRole"
+        "AWS": "arn:aws:iam::471112976134:user/seoyoung"
       },
       "Action": [
         "s3:GetBucketPolicy",
